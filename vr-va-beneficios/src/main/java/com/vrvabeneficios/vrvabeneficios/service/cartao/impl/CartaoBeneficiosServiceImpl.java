@@ -1,8 +1,8 @@
 package com.vrvabeneficios.vrvabeneficios.service.cartao.impl;
 
 import com.vrvabeneficios.vrvabeneficios.dto.request.CartaoBeneficiosRequestDto;
+import com.vrvabeneficios.vrvabeneficios.dto.response.CartaoBeneficioSaldoResponseDto;
 import com.vrvabeneficios.vrvabeneficios.dto.response.CartaoBeneficiosResponseDto;
-import com.vrvabeneficios.vrvabeneficios.exception.ResourceAlreadyExistsException;
 import com.vrvabeneficios.vrvabeneficios.exception.ResourceNotFoundException;
 import com.vrvabeneficios.vrvabeneficios.mapper.cartao.CartaoMapper;
 import com.vrvabeneficios.vrvabeneficios.model.Cartao;
@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,39 +40,14 @@ public class CartaoBeneficiosServiceImpl implements CartaoBeneficiosService {
     }
 
     @Override
-    public Optional<CartaoBeneficiosResponseDto> findCartaoBeneficiosById(Long numeroCartao) {
+    public Optional<CartaoBeneficioSaldoResponseDto> findCartaoBeneficiosById(Long numeroCartao) {
 
         Cartao entity = cartaoBeneficiosRepository.findById(numeroCartao)
-                .orElseThrow(() -> new ResourceNotFoundException("Cartão não encontrado!"));
+                .orElseThrow(ResourceNotFoundException::new);
 
-        return Optional.ofNullable(cartaoMapper.toResponseDto(entity));
-    }
+        CartaoBeneficioSaldoResponseDto saldoResponseDto = new CartaoBeneficioSaldoResponseDto();
 
-    @Override
-    public List<CartaoBeneficiosResponseDto> findAllCartaoBeneficios() {
-        return cartaoMapper.listToDto(cartaoBeneficiosRepository.findAll());
-    }
-
-    @Override
-    public CartaoBeneficiosResponseDto updateCartaoBeneficios(Long id, CartaoBeneficiosRequestDto cartaoBeneficiosRequestDto) {
-
-        Cartao cartao = cartaoBeneficiosRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cartão não encontrado!"));
-
-        cartao.setNumeroCartao(cartaoBeneficiosRequestDto.getNumeroCartao());
-
-        return cartaoMapper.toResponseDto(cartaoBeneficiosRepository.save(cartao));
-    }
-
-    @Override
-    public boolean deleteCartaoBeneficiosById(Long id) {
-        Optional<Cartao> cartao = cartaoBeneficiosRepository.findById(id);
-
-        if (cartao.isPresent()) {
-            cartaoBeneficiosRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
-        }
+        saldoResponseDto.setSaldo(entity.getSaldo());
+        return Optional.of(saldoResponseDto);
     }
 }

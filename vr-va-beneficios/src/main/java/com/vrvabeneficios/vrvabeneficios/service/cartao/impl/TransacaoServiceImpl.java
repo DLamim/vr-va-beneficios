@@ -3,6 +3,7 @@ package com.vrvabeneficios.vrvabeneficios.service.cartao.impl;
 import com.vrvabeneficios.vrvabeneficios.dto.request.TransacaoRequestDto;
 import com.vrvabeneficios.vrvabeneficios.dto.response.TransacaoResponseDto;
 import com.vrvabeneficios.vrvabeneficios.exception.InsufficientBalanceException;
+import com.vrvabeneficios.vrvabeneficios.exception.InvalidCreditCardNumberException;
 import com.vrvabeneficios.vrvabeneficios.exception.InvalidPasswordException;
 import com.vrvabeneficios.vrvabeneficios.exception.ResourceNotFoundException;
 import com.vrvabeneficios.vrvabeneficios.model.Cartao;
@@ -51,21 +52,21 @@ public class TransacaoServiceImpl implements TransacaoService {
         return Stream.of(temSaldo)
                 .filter(Boolean::booleanValue)
                 .findFirst()
-                .orElseThrow(() -> new InsufficientBalanceException("Saldo insuficiente!"));
+                .orElseThrow(() -> new InsufficientBalanceException("SALDO_INSUFICIENTE"));
     }
 
     @Override
     public void validaSenha(TransacaoRequestDto transacaoRequestDto, Cartao cartao) {
 
         cartaoBeneficiosRepository.findByNumeroCartaoAndSenha(transacaoRequestDto.getNumeroCartao(), transacaoRequestDto.getSenha())
-                .orElseThrow(() -> new InvalidPasswordException("Senha inválida!"));
+                .orElseThrow(() -> new InvalidPasswordException("SENHA_INVALIDA"));
     }
 
     @Override
     public Cartao obtemCartao(String numeroCartao) {
 
         return cartaoBeneficiosRepository.findByNumeroCartao(numeroCartao)
-                .orElseThrow(() -> new ResourceNotFoundException("Cartão inexistente!"));
+                .orElseThrow(() -> new InvalidCreditCardNumberException("CARTAO_INEXISTENTE"));
     }
 
     @Override

@@ -16,41 +16,38 @@ import java.util.Date;
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public final ResponseEntity<ExceptionResponse> handleNotFoundExceptions(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                new Date(),
-                ex.getMessage(),
-                request.getDescription(false));
+    public final ResponseEntity<Void> handleResourceNotFoundExceptions(WebRequest request) {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    @ExceptionHandler(InvalidCreditCardNumberException.class)
+    public final ResponseEntity<ExceptionResponse> handleInvalidCreditCardNumberException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                ex.getMessage());
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler(InvalidPasswordException.class)
     public final ResponseEntity<ExceptionResponse> handleInvalidPasswordException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
-                new Date(),
-                ex.getMessage(),
-                request.getDescription(false));
+                ex.getMessage());
 
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler(InsufficientBalanceException.class)
     public final ResponseEntity<ExceptionResponse> handleInsufficientBalanceException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
-                new Date(),
-                ex.getMessage(),
-                request.getDescription(false));
+                ex.getMessage());
 
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
     public final ResponseEntity<ExceptionResponse> handleResourceAlreadyExistsException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
-                new Date(),
-                ex.getMessage(),
-                request.getDescription(false));
+                ex.getMessage());
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.UNPROCESSABLE_ENTITY);
     }

@@ -14,9 +14,7 @@ public class CartaoMapper {
     public CartaoBeneficiosResponseDto toResponseDto(Cartao cartao) {
         CartaoBeneficiosResponseDto responseDto = new CartaoBeneficiosResponseDto();
 
-        responseDto.setId(cartao.getId());
         responseDto.setNumeroCartao(cartao.getNumeroCartao());
-        responseDto.setSaldo(cartao.getSaldo());
         responseDto.setSenha(cartao.getSenha());
 
         return responseDto;
